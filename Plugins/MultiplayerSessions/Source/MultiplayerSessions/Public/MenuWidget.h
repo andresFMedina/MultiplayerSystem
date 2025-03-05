@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MenuWidget.generated.h"
 
+class UButton;
 /**
  * 
  */
@@ -16,5 +17,31 @@ class MULTIPLAYERSESSIONS_API UMenuWidget : public UUserWidget
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void MenuSetup();
+	void MenuSetup(int32 NumberOfPublicConnections = 4 , FString TypeOfMatch = FString(TEXT("FreeForAll")));
+
+protected:
+
+	virtual bool Initialize() override;
+	virtual void NativeDestruct() override;
+
+private:
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* HostButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* JoinButton;
+
+	UFUNCTION()
+	void HostButtonClicked();
+
+	UFUNCTION()
+	void JoinButtonClicked();
+
+	void MenuTeardown();
+	
+	class UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem;
+
+	int32 NumPublicConnections{4};
+	FString MatchType{ "FreeForAll" };
 };
